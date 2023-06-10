@@ -23,7 +23,7 @@ public class RentalController {
     @GetMapping
     public ResponseEntity<List<Product>> getAvailableProducts(@RequestParam("duration") Integer duration,
                                                               @RequestParam("date")String date) {
-        // remains is what i need to give only that products which are available
+
         return rentalService.getAvailableProducts(date, duration);
     }
 

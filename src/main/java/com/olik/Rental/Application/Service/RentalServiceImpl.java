@@ -61,8 +61,25 @@ public class RentalServiceImpl implements RentalService {
         LocalDate bookedFrom = localDates.get(0);
         LocalDate bookedTo = localDates.get(1);
 
+        List<Product> availableProductsFiltered = new ArrayList<>();
 
-        return new ResponseEntity<>(availableProducts, HttpStatus.OK);
+        for (Product product : availableProducts) {
+            boolean isOverlap = false;
+
+            for (BookedProduct bookedProduct : ProductStatus) {
+                if (BookedProduct.isDateRangeOverlap(bookedProduct.getBookedFrom(), bookedProduct.getBookedTo(),
+                        bookedFrom, bookedTo) && product.getId().equals(bookedProduct.getId())) {
+                    isOverlap = true;
+                    break;
+                }
+            }
+
+            if (!isOverlap) {
+                availableProductsFiltered.add(product);
+            }
+        }
+
+        return new ResponseEntity<>(availableProductsFiltered, HttpStatus.OK);
     }
 
     public void addProductStatus(Integer productId,LocalDate bookedFrom, LocalDate bookedTo){
