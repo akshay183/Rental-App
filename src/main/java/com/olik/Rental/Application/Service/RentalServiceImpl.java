@@ -2,6 +2,7 @@ package com.olik.Rental.Application.Service;
 
 import com.olik.Rental.Application.Dao.BookedProduct;
 import com.olik.Rental.Application.Dao.Product;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.List;
 import static com.olik.Rental.Application.Dao.BookedProduct.isDateRangeOverlap;
 
 @Service
+@Log4j2
 public class RentalServiceImpl implements RentalService {
     List<BookedProduct> ProductStatus;
     private final List<Product> availableProducts;
@@ -25,7 +27,7 @@ public class RentalServiceImpl implements RentalService {
         availableProducts.add(new Product(1, "Cycle", "cycle.jpg", 10.0));
         availableProducts.add(new Product(2, "Racket", "racket.jpg", 5.0));
         availableProducts.add(new Product(3, "Scooter", "scooter.jpg", 11.0));
-        availableProducts.add(new Product(2, "Rocket", "rocket.jpg", 17.0));
+        availableProducts.add(new Product(4, "Rocket", "rocket.jpg", 17.0));
     }
 
     @Override
@@ -39,7 +41,7 @@ public class RentalServiceImpl implements RentalService {
 
             boolean hasOverlap = ProductStatus.stream()
                     .anyMatch(obj -> isDateRangeOverlap(obj.getBookedFrom(),
-                            obj.getBookedTo(), bookedFrom, bookedTo));
+                            obj.getBookedTo(), bookedFrom, bookedTo) && productId.equals(obj.getId()));
 
             if(!hasOverlap){
                 addProductStatus(productId, bookedFrom, bookedTo);
@@ -64,7 +66,9 @@ public class RentalServiceImpl implements RentalService {
     }
 
     public void addProductStatus(Integer productId,LocalDate bookedFrom, LocalDate bookedTo){
-        ProductStatus.add(new BookedProduct(productId, bookedFrom, bookedTo));
+        BookedProduct bookedProduct = new BookedProduct(productId, bookedFrom, bookedTo);
+        log.info("booked"+bookedProduct);
+        ProductStatus.add(bookedProduct);
     }
 
     public List<LocalDate> getDate(String date, Integer duration){

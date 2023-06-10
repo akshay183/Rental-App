@@ -16,7 +16,7 @@ public class BookedProduct {
     public BookedProduct(Integer id, LocalDate bookedFrom, LocalDate bookedTo){
 
         this.id = id;
-        this.bookedTo = bookedFrom;
+        this.bookedTo = bookedTo;
         this.bookedFrom = bookedFrom;
     }
 
